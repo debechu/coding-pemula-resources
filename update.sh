@@ -1,0 +1,4 @@
+export WEBHOOK_ID=788294299317174312
+export WEBHOOK_TOKEN=P8Xwlgs5RvE7k_oRo6lh4o264hzHwEqSUZ7h2SRItYj73gO7Avk6ZeMR-MdDHgFAetFp
+
+exec node update.js
