@@ -1,4 +1,4 @@
-const { readdirSync, readFileSync, writeFileSync, stat } = require("fs");
+const { readdirSync, readFileSync, writeFileSync, access, constants } = require("fs");
 
 const CHANNEL_ID = process.env.CHANNEL_ID;
 const BOT_TOKEN = process.env.BOT_TOKEN;
@@ -52,15 +52,12 @@ async function PostResources(channel)
 }
 
 client.on("ready", () => {
-    stat("./updated").catch(async (err) => {
-        if (err.code == EACCES)
-        {
-            let channel = await client.channels.fetch(CHANNEL_ID);
-            await channel.bulkDelete(await channel.fetch({ limit: 100 }));
-            await PostResources(channel);
+    access("./updated", constants.F_OK, async (err) => {
+        let channel = await client.channels.fetch(CHANNEL_ID);
+        await channel.bulkDelete(await channel.fetch({ limit: 100 }));
+        await PostResources(channel);
 
-            writeFileSync("./updated", "");
-        }
+        writeFileSync("./updated", "");
     });
 });
 
