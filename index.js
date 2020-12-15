@@ -29,7 +29,7 @@ client.resources = {};
 
 function ResourceToString(resource)
 {
-    return `${resource.name} (${resource.languages}): ${resource.url}`;
+    return `(${resource.languages}) ${resource.name}: ${resource.url}`;
 }
 
 function MakeMessageContent(category)
