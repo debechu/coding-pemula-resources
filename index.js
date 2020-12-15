@@ -34,7 +34,7 @@ function ResourceToString(resource)
 
 function MakeMessageContent(category)
 {
-    return `__**${category}**_\n`
+    return `__**${category}**__\n`
         + client.resources[category]
             .map((resource) => ResourceToString(resource))
             .join('\n');
@@ -45,16 +45,14 @@ async function PostResources(channel)
     for (const category of Object.keys(client.resources))
     {
         const content = MakeMessageContent(category);
-        for (const message of messages)
-        {
-            await channel.send(content, { split: true });
-        }
+        await channel.send(content, { split: true });
     }
 }
 
 client.on("ready", () => {
     access("./updated", constants.F_OK, async (err) => {
         let channel = await client.channels.fetch(CHANNEL_ID, false);
+        console.log(channel);
         await channel.bulkDelete(await channel.messages.fetch({ limit: 100 }));
         await PostResources(channel);
 
