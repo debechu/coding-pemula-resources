@@ -1,11 +1,11 @@
-const { readdirSync, readFileSync, writeFileSync, access, constants } = require("fs");
+const { readdirSync, readFileSync, writeFileSync, constants, accessSync } = require("fs");
 
 const CHANNEL_ID = process.env.CHANNEL_ID;
 const BOT_TOKEN = process.env.BOT_TOKEN;
 
 const { Client } = require("discord.js");
 const { EACCES } = require("constants");
-let client = new Client();
+var client = new Client();
 
 client.resources = {};
 (function LoadResources()
@@ -51,14 +51,17 @@ async function PostResources(channel)
     }
 }
 
-client.on("ready", () => {
-    access("./updated", constants.F_OK, async (err) => {
+client.on("ready", async () => {
+    try {
+        accessSync("./updated", constants.F_OK);
+        console.log("No updates!");
+    } catch (err) {
         let channel = await client.channels.fetch(CHANNEL_ID);
         await channel.bulkDelete(await channel.messages.fetch({ limit: 100 }));
         await PostResources(channel);
 
         writeFileSync("./updated", "");
-    });
+    }
 });
 
 client.login(BOT_TOKEN);
