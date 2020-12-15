@@ -1,4 +1,4 @@
-const { readdirSync, readFileSync } = require("fs");
+const { readdirSync, readFileSync, statSync, writeFileSync } = require("fs");
 
 const CHANNEL_ID = process.env.CHANNEL_ID;
 const BOT_TOKEN = process.env.BOT_TOKEN;
@@ -43,15 +43,22 @@ async function PostResources(channel)
     for (const category of Object.keys(client.resources))
     {
         const content = MakeMessageContent(category);
-        console.log(content);
-        await channel.send(content, { split: true });
+        for (const message of messages)
+        {
+            await channel.send(content, { split: true });
+        }
     }
 }
 
 client.on("ready", async () => {
-    let channel = await client.channels.fetch(CHANNEL_ID);
-    await channel.bulkDelete(await channel.messages.fetch({ limit: 100 }));
-    await PostResources(channel);
+    if (!statSync("./updated", { throwIfNoEntry: false }))
+    {
+        let channel = await client.channels.fetch(CHANNEL_ID);
+        await channel.bulkDelete(await channel.fetch({ limit: 100 }));
+        await PostResources(channel);
+
+        writeFileSync("./updated", "");
+    }
 });
 
 client.login(BOT_TOKEN);
