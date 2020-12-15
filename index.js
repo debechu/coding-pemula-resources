@@ -54,7 +54,7 @@ async function PostResources(channel)
 client.on("ready", () => {
     access("./updated", constants.F_OK, async (err) => {
         let channel = await client.channels.fetch(CHANNEL_ID);
-        await channel.bulkDelete(await channel.fetch({ limit: 100 }));
+        await channel.bulkDelete(await channel.messages.fetch({ limit: 100 }));
         await PostResources(channel);
 
         writeFileSync("./updated", "");
