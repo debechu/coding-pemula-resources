@@ -1,9 +1,10 @@
-const { readdirSync, readFileSync, statSync, writeFileSync } = require("fs");
+const { readdirSync, readFileSync, writeFileSync, stat } = require("fs");
 
 const CHANNEL_ID = process.env.CHANNEL_ID;
 const BOT_TOKEN = process.env.BOT_TOKEN;
 
-const { Client } = require("discord.js")
+const { Client } = require("discord.js");
+const { EACCES } = require("constants");
 let client = new Client();
 
 client.resources = {};
@@ -50,15 +51,17 @@ async function PostResources(channel)
     }
 }
 
-client.on("ready", async () => {
-    if (!statSync("./updated", { throwIfNoEntry: false }))
-    {
-        let channel = await client.channels.fetch(CHANNEL_ID);
-        await channel.bulkDelete(await channel.fetch({ limit: 100 }));
-        await PostResources(channel);
+client.on("ready", () => {
+    stat("./updated").catch(async (err) => {
+        if (err.code == EACCES)
+        {
+            let channel = await client.channels.fetch(CHANNEL_ID);
+            await channel.bulkDelete(await channel.fetch({ limit: 100 }));
+            await PostResources(channel);
 
-        writeFileSync("./updated", "");
-    }
+            writeFileSync("./updated", "");
+        }
+    });
 });
 
 client.login(BOT_TOKEN);
