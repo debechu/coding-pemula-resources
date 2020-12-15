@@ -43,6 +43,7 @@ async function PostResources(channel)
     for (const category of Object.keys(client.resources))
     {
         const content = MakeMessageContent(category);
+        console.log(content);
         await channel.send(content, { split: true });
     }
 }
