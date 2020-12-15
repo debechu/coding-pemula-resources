@@ -45,6 +45,7 @@ async function PostResources(channel)
     for (const category of Object.keys(client.resources))
     {
         const content = MakeMessageContent(category);
+        console.log(content);
         await channel.send(content, { split: true });
     }
 }
@@ -52,7 +53,6 @@ async function PostResources(channel)
 client.on("ready", () => {
     access("./updated", constants.F_OK, async (err) => {
         let channel = await client.channels.fetch(CHANNEL_ID, false);
-        console.log(channel);
         await channel.bulkDelete(await channel.messages.fetch({ limit: 100 }));
         await PostResources(channel);
 
