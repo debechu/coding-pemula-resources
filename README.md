@@ -12,6 +12,6 @@
     }
     ```
     Note:
-    - `languages` must be alphabetical order.
+    - `languages` must be in alphabetical order.
     - `url` must be a valid url.
 3. Make a pull request and you're done!
