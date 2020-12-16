@@ -8,7 +8,7 @@
         "languages": [
             "C"
         ],
-        "url": "https://beej.us/guide/bgnet/html//index.html"
+        "url": "https://beej.us/guide/bgnet/html/index.html"
     }
     ```
 3. Make a pull request and you're done!
